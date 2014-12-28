@@ -40,8 +40,8 @@ if ( $user !== false ) {
 			unset($contact->contact->token);
 		}
 		$contact->contact->id = (int) $contact->contact->id;
-		$contact->id = (int) $contact->id;
-		
+		$contact->id = (int) $contact->contact->id;
+
 		unset($contact->contact->id);
 		unset($contact->initiator);
 
