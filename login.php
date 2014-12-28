@@ -2,13 +2,12 @@
 require_once('database/db.php');
 require_once('model/user.php');
 
-$parameters = array
-(
+$parameters = array(
 	':email' => null,
 	':password' => null
 );
-foreach($_GET as $key => $value)
-{
+
+foreach ( $_GET as $key => $value ) {
 	$parameters[":$key"] = $value;
 }
 
@@ -21,13 +20,11 @@ $db = new DB($config['dsn'], $config['username'], $config['password'], $config['
 
 $user = $db->find('User', 'user', 'email = :email AND password = :password', $parameters);
 
-if($user !== false)
-{
+if ( $user !== false ) {
 	$token = md5(time() . $user->email . $user->password);
 	$user->token = $token;
 
-	if($db->update($user, 'user', 'id = :id', array(':id' => $user->id)))
-	{
+	if ( $db->update($user, 'user', 'id = :id', array(':id' => $user->id)) ) {
 		$json = array(
 			'error' => false,
 			'token' => $token
