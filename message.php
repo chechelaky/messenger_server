@@ -32,7 +32,7 @@ $db = new DB($config['dsn'], $config['username'], $config['password'], $config['
 $user = $db->find('User', 'user', 'token = :token', $userParameters);
 
 if ( $user !== false ) {
-	$contact = $db->find('Contact', 'contact', 'id = :contact', $contactParameters);
+	$contact = $db->find('Contact', 'contact', 'contact = :contact', $contactParameters);
 
 	if ( $contact != null ) {
 		$message = new Message();
