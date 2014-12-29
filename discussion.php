@@ -4,15 +4,15 @@ require_once('model/contact.php');
 require_once('model/message.php');
 require_once('model/user.php');
 
-$parameters = array
-(
+$parameters = array(
 	':token' => null,
 	':contact' => null
 );
-foreach($_GET as $key => $value)
-{
+
+foreach ( $_GET as $key => $value ) {
 	$parameters[":$key"] = $value;
 }
+
 $userParameters = array(
 	array_shift(array_keys($parameters)) => array_shift($parameters)
 );
@@ -26,20 +26,16 @@ $db = new DB($config['dsn'], $config['username'], $config['password'], $config['
 
 $user = $db->find('User', 'user', 'token = :token', $userParameters);
 
-if($user !== false)
-{
-	$messages = $db->search('Message', 'message', 'contact = :contact', $parameters);
-
-	foreach($messages as $message)
-	{
+if ( $user !== false ) {
+	$messages = $db->search('Message', 'message', 'contact = :contact OR user = :contact', $parameters);
+	
+	foreach ( $messages as $message ) {
 		$message->id = (int) $message->id;
-		if($message->user == $user->id)
-		{
+		if ( $message->user == $user->id ) {
 			$message->sent = true;
 		}
 		unset($message->id);
 		unset($message->contact);
-		unset($message->user);
 	}
 	$json = array(
 		'error' => false,

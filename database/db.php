@@ -1,18 +1,14 @@
 <?php
-class DB
-{
+class DB {
 	private $pdo;
 
-	public function DB($dsn, $username, $password, $options = null)
-	{
+	public function DB($dsn, $username, $password, $options = null) {
 		$this->pdo = new PDO($dsn, $username, $password, $options);
 	}
 
-	public function find($class, $table, $where, $whereArgs = array(), $order = null)
-	{
+	public function find($class, $table, $where, $whereArgs = array(), $order = null) {
 		$sql = "SELECT * FROM $table WHERE $where";
-		if($order != null)
-		{
+		if ( $order != null ) {
 			$sql .= " ORDER BY $order";
 		}
 		$sql .= ' LIMIT 1';
@@ -21,21 +17,18 @@ class DB
 		return $pdoStatement->fetchObject($class);
 	}
 
-	public function search($class, $table, $where, $whereArgs = array())
-	{
+	public function search($class, $table, $where, $whereArgs = array()) {
 		$sql = "SELECT * FROM $table WHERE $where";
 		$pdoStatement = $this->pdo->prepare($sql);
 		$pdoStatement->execute($whereArgs);
 		return $pdoStatement->fetchAll(PDO::FETCH_CLASS, $class);
 	}
 
-	public function insert($model, $table)
-	{
+	public function insert($model, $table) {
 		$fields = '';
 		$values = '';
 		$whereArgs = array();
-		foreach($model->toDB() as $name => $value)
-		{
+		foreach ( $model->toDB() as $name => $value ) {
 			if($fields != '')
 			{
 				$fields .= ', ';
@@ -48,21 +41,17 @@ class DB
 		$sql = "INSERT INTO $table ($fields) VALUES ($values)";
 		$pdoStatement = $this->pdo->prepare($sql);
 		$result = $pdoStatement->execute($whereArgs);
-		if(!$result)
-		{
+		if ( !$result ) {
 			return false;
 		}
 		return $this->pdo->lastInsertId();
 
 	}
 
-	public function update($model, $table, $where, $whereArgs = array())
-	{
+	public function update($model, $table, $where, $whereArgs = array()) {
 		$set = '';
-		foreach($model as $name => $value)
-		{
-			if($set != '')
-			{
+		foreach ( $model as $name => $value ) {
+			if ( $set != '' ) {
 				$set .= ', ';
 			}
 			$set .= "$name = :$name";
@@ -73,8 +62,7 @@ class DB
 		return $pdoStatement->execute($whereArgs);
 	}
 
-	public function delete($table, $where, $whereArgs = array())
-	{
+	public function delete($table, $where, $whereArgs = array()) {
 		$sql = "DELETE FROM $table WHERE $where";
 		$pdoStatement = $this->pdo->prepare($sql);
 		return $pdoStatement->execute($whereArgs);

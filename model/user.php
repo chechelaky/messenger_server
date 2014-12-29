@@ -1,6 +1,5 @@
 <?php
-class User
-{
+class User {
 	public $id;
 	public $first_name;
 	public $last_name;
@@ -8,8 +7,7 @@ class User
 	public $password;
 	public $token;
 
-	public function toDB()
-	{
+	public function toDB() {
 		$object = get_object_vars($this);
 		return $object;
 	}

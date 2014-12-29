@@ -1,6 +1,5 @@
 <?php
-class Message
-{
+class Message {
 	public $id;
 	public $contact;
 	public $message;
@@ -9,8 +8,7 @@ class Message
 
 	public $sent = false;
 
-	public function toDB()
-	{
+	public function toDB() {
 		$object = get_object_vars($this);
 		unset($object['sent']);
 		return $object;
