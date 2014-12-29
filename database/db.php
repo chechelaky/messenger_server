@@ -17,8 +17,11 @@ class DB {
 		return $pdoStatement->fetchObject($class);
 	}
 
-	public function search($class, $table, $where, $whereArgs = array()) {
+	public function search($class, $table, $where, $whereArgs = array(), $order = null) {
 		$sql = "SELECT * FROM $table WHERE $where";
+		if ( $order != null ) {
+			$sql .= " ORDER BY $order";
+		}
 		$pdoStatement = $this->pdo->prepare($sql);
 		$pdoStatement->execute($whereArgs);
 		return $pdoStatement->fetchAll(PDO::FETCH_CLASS, $class);

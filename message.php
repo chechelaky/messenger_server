@@ -14,6 +14,8 @@ foreach ( $_GET as $key => $value ) {
 	$parameters[":$key"] = $value;
 }
 
+$idContact = $parameters[":contact"];
+
 $userParameters = array(
 	array_shift(array_keys($parameters)) => array_shift($parameters)
 );
@@ -36,7 +38,7 @@ if ( $user !== false ) {
 
 	if ( $contact != null ) {
 		$message = new Message();
-		$message->contact = $contact->id;
+		$message->contact = $idContact;
 		$message->message = $parameters[':message'];
 		$message->date = date('Y-m-d H:i:s');
 		$message->user = $user->id;
