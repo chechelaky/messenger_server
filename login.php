@@ -27,7 +27,8 @@ if ( $user !== false ) {
 	if ( $db->update($user, 'user', 'id = :id', array(':id' => $user->id)) ) {
 		$json = array(
 			'error' => false,
-			'token' => $token
+			'token' => $token,
+			'id' => $user->id
 		);
 	}
 }
