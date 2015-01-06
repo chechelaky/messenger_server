@@ -14,7 +14,7 @@ class DB {
 		$sql .= ' LIMIT 1';
 		$pdoStatement = $this->pdo->prepare($sql);
 		foreach ($whereArgs as $value) {
-			$value = mysql_real_escape_string($value);
+			$value = htmlentities(addcslashes(mysql_real_escape_string($value), '%_'));
 		}
 		$pdoStatement->execute($whereArgs);
 		return $pdoStatement->fetchObject($class);
@@ -40,12 +40,15 @@ class DB {
 				$fields .= ', ';
 				$values .= ', ';
 			}
+
 			$fields .= $name;
 			$values .= ":$name";
-			$whereArgs[":$name"] = $value;
+
+			$whereArgs[":$name"] = htmlentities($value);
 		}
 		$sql = "INSERT INTO $table ($fields) VALUES ($values)";
 		$pdoStatement = $this->pdo->prepare($sql);
+
 		$result = $pdoStatement->execute($whereArgs);
 		if ( !$result ) {
 			return false;
@@ -71,6 +74,9 @@ class DB {
 	public function delete($table, $where, $whereArgs = array()) {
 		$sql = "DELETE FROM $table WHERE $where";
 		$pdoStatement = $this->pdo->prepare($sql);
+		foreach ($whereArgs as $value) {
+			$value = $value;
+		}
 		return $pdoStatement->execute($whereArgs);
 	}
 }
