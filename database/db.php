@@ -13,6 +13,9 @@ class DB {
 		}
 		$sql .= ' LIMIT 1';
 		$pdoStatement = $this->pdo->prepare($sql);
+		foreach ($whereArgs as $value) {
+			$value = mysql_real_escape_string($value);
+		}
 		$pdoStatement->execute($whereArgs);
 		return $pdoStatement->fetchObject($class);
 	}
