@@ -2,6 +2,12 @@
 class DB {
 	private $pdo;
 
+	private $listInsult=array(
+		'chenapan',
+		'goujat',
+		'crapule'
+	);
+
 	public function DB($dsn, $username, $password, $options = null) {
 		$this->pdo = new PDO($dsn, $username, $password, $options);
 	}
@@ -31,6 +37,9 @@ class DB {
 	}
 
 	public function insert($model, $table) {
+		if ( in_array($model->toDB()['message'], $this->listInsult)){
+			return false;
+		} 
 		$fields = '';
 		$values = '';
 		$whereArgs = array();
@@ -54,7 +63,6 @@ class DB {
 			return false;
 		}
 		return $this->pdo->lastInsertId();
-
 	}
 
 	public function update($model, $table, $where, $whereArgs = array()) {
