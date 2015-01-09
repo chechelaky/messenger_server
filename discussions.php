@@ -24,7 +24,7 @@ $user = $db->find('User', 'user', 'token = :token', $parameters);
 if ( $user !== false ) {
 	$user->id = (int) $user->id;
 
-	$contacts = $db->search('Contact', 'contact', 'initiator = :id OR contact = :id', array(':id' => $user->id));
+	$contacts = $db->search('Contact', 'contact', 'initiator = :id', array(':id' => $user->id));
 
 	foreach ( $contacts as $contact ) {
 		if ( $user->id != $contact->initiator ) {
@@ -46,7 +46,7 @@ if ( $user !== false ) {
 		unset($contact->initiator);
 
 
-		$contact->message = $db->find('Message', 'message', 'contact = :contact', array(':contact' => (int) $contact->id), 'date asc');
+		$contact->message = $db->find('Message', 'message', 'contact = :contact AND user = :user OR user = :contact AND contact = :user', array(':contact' => (int) $contact->id, ':user' => $user->id), 'date desc');
 		
 		if ( !$contact->message ) {
 			unset($contact->message);
@@ -64,5 +64,6 @@ if ( $user !== false ) {
 		'contacts' => $contacts
 	);
 }
+
 // echo json_encode($json, JSON_PRETTY_PRINT);            5.4 required!!
 echo json_encode($json);
