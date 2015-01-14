@@ -27,7 +27,8 @@ $db = new DB($config['dsn'], $config['username'], $config['password'], $config['
 $user = $db->find('User', 'user', 'token = :token', $userParameters);
 
 if ( $user !== false ) {
-	$messages = $db->search('Message', 'message', 'contact = :contact OR user = :contact', $parameters, 'date desc');
+	$parameters[":user"] = $user->id;
+	$messages = $db->search('Message', 'message', 'contact = :contact AND user = :user OR contact = :user AND user = :contact', $parameters, 'date desc');
 	
 	foreach ( $messages as $message ) {
 		$message->id = (int) $message->id;

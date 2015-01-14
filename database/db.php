@@ -65,6 +65,32 @@ class DB {
 		return $this->pdo->lastInsertId();
 	}
 
+	public function insertContact($model, $table) {
+		$fields = '';
+		$values = '';
+		$whereArgs = array();
+		foreach ( $model->toDB() as $name => $value ) {
+			if($fields != '')
+			{
+				$fields .= ', ';
+				$values .= ', ';
+			}
+
+			$fields .= $name;
+			$values .= ":$name";
+
+			$whereArgs[":$name"] = htmlentities($value);
+		}
+		$sql = "INSERT INTO $table ($fields) VALUES ($values)";
+		$pdoStatement = $this->pdo->prepare($sql);
+
+		$result = $pdoStatement->execute($whereArgs);
+		if ( !$result ) {
+			return false;
+		}
+		return $this->pdo->lastInsertId();
+	}
+
 	public function update($model, $table, $where, $whereArgs = array()) {
 		$set = '';
 		foreach ( $model as $name => $value ) {

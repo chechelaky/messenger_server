@@ -6,6 +6,12 @@ class Contact {
 
 	public $message;
 
+	function Contact ($id, $initiator, $contact) {
+        $this->id = $id;
+        $this->initiator = $initiator;
+        $this->contact = $contact;
+	}
+
 	public function toDB() {
 		$object = get_object_vars($this);
 		unset($object['message']);
