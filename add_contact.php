@@ -20,17 +20,45 @@ $json = array(
 $config = require_once('database/config.php');
 $db = new DB($config['dsn'], $config['username'], $config['password'], $config['options']);
 
-var_dump($parameters);
-//$user = $db->find('User', 'user', 'token = :token', $parameters);
-$contact = $db->find('User', 'user', 'email = :contact', $parameters);
+$email = array(
+	':email' => $parameters[':contact']
+);
 
-if ( $contact !== false) {
-	echo 'hehe';
-	$contactValid = new Contact(1, $user->id, $contact->id);
-	insertContact($contact, 'contact');
-	$json = array(
-			'error' => false,
+$contactDb = $db->find('User', 'user', 'email = :email', $email);
+
+if ( $contactDb !== false && $contactDb->token != $parameters[':token']) {
+	$userParameters = array(
+		array_shift(array_keys($parameters)) => array_shift($parameters)
 	);
+
+	$user = $db->find('User', 'user', 'token = :token', $userParameters);
+
+	$paramContact = array(
+		':initiator' => $user->id,
+		':contact' => $contactDb->id
+	);
+
+	$contactTmp = $db->find('Contact', 'contact', 'initiator = :initiator AND contact = :contact', $paramContact);
+
+	if( $contactTmp === false ) {
+		$contact = new Contact();
+		$contact->initiator = $user->id;
+		$contact->contact = $contactDb->id;
+
+		$id = $db->insert($contact, 'contact');
+
+		$contact2 = new Contact();
+		$contact2->initiator = $contactDb->id;
+		$contact2->contact = $user->id;
+
+		$id2 = $db->insert($contact2, 'contact');
+
+		if ( $id !== false && $id2 !== false) {
+			$json = array(
+				'error' => false,
+			);
+		}
+	}
 }
 // echo json_encode($json, JSON_PRETTY_PRINT);            5.4 required!!
 echo json_encode($json);
