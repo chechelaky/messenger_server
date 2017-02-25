@@ -5,11 +5,18 @@ class Contact {
 	public $contact;
 
 	public $message;
+	
+	private function __construct(){
+		$id = -1;
+		$initiator = -1;
+		$contact = -1;
+		$message = -1;
+	}
 
 	function Contact ($id, $initiator, $contact) {
-        $this->id = $id;
-        $this->initiator = $initiator;
-        $this->contact = $contact;
+		$this->id = $id;
+		$this->initiator = $initiator;
+		$this->contact = $contact;
 	}
 
 	public function toDB() {
