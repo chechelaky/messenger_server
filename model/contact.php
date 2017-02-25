@@ -6,7 +6,7 @@ class Contact {
 
 	public $message;
 
-	function Contact ($id, $initiator, $contact) {
+	function Contact($id = null, $initiator = null, $contact = null){
         $this->id = $id;
         $this->initiator = $initiator;
         $this->contact = $contact;
